@@ -1,10 +1,6 @@
 <script>
   import { onMount } from "svelte";
   import { supabase } from "../supabase";
-  // import DeletePostModal from "./DeletePostModal.svelte";
-  import { createEventDispatcher } from "svelte";
-
-  const dispatch = createEventDispatcher();
 
   export let src,
     username,
@@ -65,21 +61,18 @@
     }
   };
 
-  const deletePost = async (postId) => {
+  const deletePost = async () => {
     try {
-      const { error } = await supabase.from("posts").delete().eq("id", postId);
+      const { error } = await supabase.storage.from("posts").remove([src]);
 
       if (error) throw error;
 
-      // getPosts();
-      dispatch("deletePost", postId);
+      getPosts();
     } catch (error) {
       console.log(error.message);
     }
   };
 </script>
-
-<!-- <DeletePostModal {postId} {getPosts} on:deletePost={deletePost} /> -->
 
 <div class="w-1/4 py-5">
   <div class="flex items-center justify-between pb-2">
@@ -96,10 +89,7 @@
       </p>
     </div>
     {#if author === loggedUser.id}
-      <button
-        class="btn btn-circle btn-ghost btn-sm"
-        on:click={() => deletePost(postId)}
-      >
+      <button class="btn btn-circle btn-ghost btn-sm" on:click={deletePost}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-6 w-6"

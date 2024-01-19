@@ -23,7 +23,7 @@
 
       if (data) posts = data;
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     }
   };
 
@@ -35,7 +35,7 @@
 
       if (data) users = data;
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     }
   };
 
@@ -75,18 +75,22 @@
   <Modal {loggedUser} {getPosts} />
 
   <div class="w-full p-5 flex flex-col items-center">
-    {#each posts as post (post.id)}
-      <Post
-        src={post.path}
-        username={post.users.username}
-        description={post.description}
-        date={post.createdAt}
-        author={post.users.id}
-        {loggedUser}
-        postId={post.id}
-        {getPosts}
-        on:deletePost={deletePost}
-      />
-    {/each}
+    {#if posts.length > 0}
+      {#each posts as post (post.id)}
+        <Post
+          src={post.path}
+          username={post.users.username}
+          description={post.description}
+          date={post.createdAt}
+          author={post.users.id}
+          {loggedUser}
+          postId={post.id}
+          {getPosts}
+          on:deletePost={deletePost}
+        />
+      {/each}
+    {:else}
+      <p class="text-2xl">No posts</p>
+    {/if}
   </div>
 {/if}
